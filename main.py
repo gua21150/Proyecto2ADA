@@ -8,11 +8,10 @@ import time
 import numpy as np
 
 
-
-
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     # diccionario con las diferentes figuras
+
     points = {3: [[1,1],[5,1],[3,3]],
               4: [[1,1],[5,1],[4,3],[1,5]],
               5: [[1,1],[5,1],[5,5],[1,5],[3,3]],
@@ -55,6 +54,8 @@ if __name__ == '__main__':
 
     # Prueba triangulacion divide and conquer
     tiempos = []
+    tiempo2 = []
+
     for polygon_points in points:
         # Crear un camino para el polígono
         vertices = points.get(polygon_points)
@@ -66,7 +67,7 @@ if __name__ == '__main__':
         stop1 = timeit.default_timer()
 
         # Visualizar el polígono inicial y la triangulación
-        plt.figure(figsize=(20, 20))
+        plt.figure(figsize=(15, 15))
 
         # Polígono
         plt.plot(*zip(*np.vstack([vertices, vertices[0]])), 'b-o', label='Polígono')
@@ -87,12 +88,13 @@ if __name__ == '__main__':
 
         stop2 = timeit.default_timer()
         tiempos.append((stop2 - t2) + (stop1 - t1))
+        tiempo2.append(stop1-t1)
 
         for i in triangulacion_final:
             point1 = i[0]
             point2 = i[1]
             plt.plot([point1[0], point2[0]], [point1[1], point2[1]], 'r--')
-        
+
         # Configurar la visualización
         plt.title('Polígono con Triangulación Interna Filtrada')
         plt.xlabel('X')
@@ -114,9 +116,26 @@ if __name__ == '__main__':
         tests.append(j)
     f.close()
 
+    f = open("tiempos2.txt", "w")
+    tests = [3]
+    j = 3
+    for i in tiempo2:
+        f.write(str(j) + ", " + str(i) + "\n")
+        j += 1
+        tests.append(j)
+    f.close()
+
     # plot x = n, y = tiempo
-    plt.figure(figsize=(20, 20))
+    plt.figure(figsize=(15, 15))
     plt.plot(tests[0:38], tiempos)
+    plt.xlabel('Cantidad de vertices')
+    plt.ylabel('Tiempo de ejecución (s)')
+    plt.title('Tiempo de ejecución de divide and conquer: Triangulacion de polinomios')
+    plt.show()
+
+    # plot x = n, y = tiempo
+    plt.figure(figsize=(15, 15))
+    plt.plot(tests[0:38], tiempo2)
     plt.xlabel('Cantidad de vertices')
     plt.ylabel('Tiempo de ejecución (s)')
     plt.title('Tiempo de ejecución de divide and conquer: Triangulacion de polinomios')
